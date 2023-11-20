@@ -13,7 +13,7 @@ $ cd passerelle
 $ ./setup.sh 
 ```
 
-## Start
+## Start
 ```sh
 $ ./start.sh
 ```
