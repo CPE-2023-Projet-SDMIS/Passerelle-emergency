@@ -4,12 +4,11 @@ from flata import Flata, where
 from flata.storages import JSONStorage
 import time
 
-
 # Database
 db = Flata('data/db.json', storage=JSONStorage)
 sensor_data = db.table('sensor_data')
 
-# Spécifiez le port série que vous souhaitez utiliser
+# Port série utilisé
 port = '/dev/ttyACM0'
 
 # Paramètres de la communication série
@@ -20,30 +19,29 @@ try:
     ser = serial.Serial(port, baudrate)
 
     while True:
+
         # Lire une ligne de données depuis le port série
         line = ser.readline().decode('utf-8').strip()
 
-        #print(line)
-
         resultat = {}
 
-        # Utilise une expression régulière pour trouver des correspondances de lettres suivies de nombres
+        # Expression régulière pour trouver des correspondances de lettres suivies de nombres
         matches = re.findall(r'([A-Z])(\d+)', line)
 
-        for match in matches:
-            lettre = match[0]
-            valeur = int(match[1])
-            resultat[lettre] = valeur
+        # Vérifier le nombre de correspondances
+        if len(matches) == 4:
+            for match in matches:
+                lettre = match[0]
+                valeur = int(match[1])
+                resultat[lettre] = valeur
 
-        # Afficher la ligne de données lue
-        print(resultat)
+            # Afficher la ligne de données lue
+            print(resultat)
 
-        date = time.time()
+            date = time.time()
 
-        sensor_data.insert({f'{date}' : resultat})
-
-        #print("Data dans la db :")
-        #print(sensor_data.search(where('id') == len(sensor_data)))
+            # Ajouter des données au dictionnaire
+            sensor_data.insert({f'{date}': resultat})
 
 except serial.SerialException:
     print(f"Le port série {port} n'a pas pu être ouvert. Assurez-vous que le périphérique est correctement connecté.")
