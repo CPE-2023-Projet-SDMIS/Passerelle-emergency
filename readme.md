@@ -8,7 +8,7 @@ Passerelle sous la forme d'une API.
 
 ## Setup
 ```sh
-$ git clone "rien pour l'instant"
+$ git clone https://github.com/CPE-2023-Projet-IoT/Passerelle.git
 $ cd passerelle
 $ ./setup.sh 
 ```
