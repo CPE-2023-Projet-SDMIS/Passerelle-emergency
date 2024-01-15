@@ -6,6 +6,8 @@ import requests
 # Port série utilisé
 port = '/dev/ttyACM0'
 
+API_URL = "http://45.158.77.26:8080"
+
 # Paramètres de la communication série
 baudrate = 115200 
 
@@ -24,14 +26,14 @@ try:
         message = reveived[2:]
 
 
-        json_data = '['
-        
         for i in range(0, len(message), 2):
             if int(message[i]) != 0:
-                json_data = json_data + '{"sensorID":' + message[i] + ',"intensity":' + message[i+1] + '},'
-        json_data = json_data[:-1] + ']'
+                json_data =  '{"sensorID":' + message[i] + ',"intensity":' + message[i+1] + '}'
+                print(json_data)
+                json_data = json.loads(json_data)
+                #print(json_data['sensorID'])
+                requests.post(API_URL + "/api/passerelle/addSensorEvent", json=json_data)
 
-        print(json_data)
 except serial.SerialException:
     print(f"Le port série {port} n'a pas pu être ouvert. Assurez-vous que le périphérique est correctement connecté.")
 except KeyboardInterrupt:
